@@ -1,14 +1,29 @@
-export const HasilNormalisasi = () => {
-    const renderRowValue = (row: number, column: number) => {
-        if (row == 1) {
-            return (
+interface Props {
+    kriteriaData: any;
+    hasilNormalisasi: any;
+}
+
+export const HasilNormalisasi = ({ kriteriaData, hasilNormalisasi }: Props) => {
+    const renderRowValue = (row: number, data: any) => {
+        return (
+            <>
                 <p className="text-xs text-black text-center my-auto">
-                    Fleksibilitas
+                    {data.name}
                 </p>
-            );
-        } else {
-            return <p className="text-xs text-black text-center my-auto">1</p>;
-        }
+                {kriteriaData.map((item: any, index: number) => {
+                    return (
+                        <p
+                            className="text-xs text-black text-center my-auto"
+                            key={index}
+                        >
+                            {hasilNormalisasi.length === 0
+                                ? 0
+                                : hasilNormalisasi[row][index]}
+                        </p>
+                    );
+                })}
+            </>
+        );
     };
 
     return (
@@ -18,45 +33,31 @@ export const HasilNormalisasi = () => {
                     Hasil Normalisasi
                 </p>
             </div>
-            <div className="w-full mt-2 py-3 grid grid-cols-9 border-y border-[#E4E4E4]">
+            <div
+                className={`w-full mt-2 py-3 grid grid-cols-${
+                    kriteriaData.length + 1
+                } border-y border-[#E4E4E4]`}
+            >
                 <p className="font-bold text-xs text-[#AEAEAE] text-center">
                     Nama Kriteria
                 </p>
-                <p className="font-bold text-xs text-[#AEAEAE] text-center">
-                    Fleksibilitas
-                </p>
-                <p className="font-bold text-xs text-[#AEAEAE] text-center">
-                    Fleksibilitas
-                </p>
-                <p className="font-bold text-xs text-[#AEAEAE] text-center">
-                    Fleksibilitas
-                </p>
-                <p className="font-bold text-xs text-[#AEAEAE] text-center">
-                    Fleksibilitas
-                </p>
-                <p className="font-bold text-xs text-[#AEAEAE] text-center">
-                    Fleksibilitas
-                </p>
-                <p className="font-bold text-xs text-[#AEAEAE] text-center">
-                    Fleksibilitas
-                </p>
-                <p className="font-bold text-xs text-[#AEAEAE] text-center">
-                    Fleksibilitas
-                </p>
-                <p className="font-bold text-xs text-[#AEAEAE] text-center">
-                    Fleksibilitas
-                </p>
+                {kriteriaData.map((item: any, index: number) => (
+                    <p
+                        className="font-bold text-xs text-[#AEAEAE] text-center"
+                        key={index}
+                    >
+                        {item.name}
+                    </p>
+                ))}
             </div>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((column) => (
+            {kriteriaData.map((data: any, row: number) => (
                 <div
-                    className="w-full py-4 grid grid-cols-9 border-b border-[#E4E4E4]"
-                    key={column}
+                    className={`w-full py-4 grid grid-cols-${
+                        kriteriaData.length + 1
+                    } border-b border-[#E4E4E4]`}
+                    key={row}
                 >
-                    <>
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((row) => (
-                            <>{renderRowValue(row, column)}</>
-                        ))}
-                    </>
+                    {renderRowValue(row, data)}
                 </div>
             ))}
             <div className="w-20 h-10 mx-auto mt-5 bg-[#D9D9D9]"></div>

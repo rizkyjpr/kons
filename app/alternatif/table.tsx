@@ -4,6 +4,7 @@ import AddModal from "./modal/addModal";
 import EditModal from "./modal/editModal";
 import { PencilIcon } from "@/assets/PencilIcon";
 import { TrashIcon } from "@/assets/TrashIcon";
+import { FiCheck } from "react-icons/fi";
 
 export const Table = () => {
     const currentDate = new Date();
@@ -12,30 +13,52 @@ export const Table = () => {
         JSON.parse(localStorage.getItem("supplier") || "[]")
     );
 
+    const [currentSupplier, setCurrentSupplier] = useState(-1);
     const [addSupplierModal, setAddSupplierModal] = useState(false);
     const [editSupplierModal, setEditSupplierModal] = useState(false);
-    const [name, setName] = useState("");
 
     const kriteria = JSON.parse(
         localStorage.getItem("kriteria") || "[]"
     ).filter((item: any) => item.check);
 
-    const handleSubmit = () => {
+    const handleSubmit = (formData: any) => {
         let date = currentDate.getDate();
         let month = currentDate.getMonth() + 1;
         let year = currentDate.getFullYear();
 
         const newData = {
-            name,
+            name: formData.nama,
             date: `${month} ${date}, ${year}`,
             addedBy: "Rizky Pratama",
             check: false,
+            rating: formData.rating,
         };
 
         localStorage.setItem("supplier", JSON.stringify([...data, newData]));
 
-        setName("");
         setData([...data, newData]);
+    };
+
+    const handleEdit = (formData: any) => {
+        let date = currentDate.getDate();
+        let month = currentDate.getMonth() + 1;
+        let year = currentDate.getFullYear();
+
+        console.log(formData.rating);
+        const form = {
+            name: formData.nama,
+            date: `${month} ${date}, ${year}`,
+            addedBy: "Rizky Pratama",
+            check: false,
+            rating: formData.rating,
+        };
+
+        const newData = data;
+        newData[currentSupplier] = form;
+
+        localStorage.setItem("supplier", JSON.stringify([...newData]));
+
+        setData([...newData]);
     };
 
     const handleDelete = (index: number) => {
@@ -64,8 +87,21 @@ export const Table = () => {
 
     return (
         <>
-            {addSupplierModal && <AddModal setModal={setAddSupplierModal} />}
-            {editSupplierModal && <EditModal setModal={setEditSupplierModal} />}
+            {addSupplierModal && (
+                <AddModal
+                    kriteriaData={kriteria}
+                    setModal={setAddSupplierModal}
+                    handleSubmit={handleSubmit}
+                />
+            )}
+            {editSupplierModal && (
+                <EditModal
+                    kriteriaData={kriteria}
+                    setModal={setEditSupplierModal}
+                    supplierData={data[currentSupplier]}
+                    handleSubmit={handleEdit}
+                />
+            )}
             <div className="w-full h-full p-4 bg-white flex flex-col justify-between items-center rounded-[20px]">
                 <div className="w-full flex flex-col justify-center items-center">
                     <div className="w-full flex justify-between items-center">
@@ -96,29 +132,44 @@ export const Table = () => {
                             Action
                         </p>
                     </div>
-                    {[1, 2, 3, 4, 5].map((item) => (
+                    {data.map((item, index) => (
                         <div
                             className="w-full py-4 grid grid-cols-5 border-b border-[#E4E4E4]"
-                            key={item}
+                            key={index}
                         >
-                            <div className="w-5 h-5 mx-auto border border-[#DADADA] rounded-[3px]"></div>
+                            <button
+                                onClick={() => handleCheckbox(index)}
+                                className={`flex justify-center items-center w-5 h-5 my-auto mx-auto ${
+                                    item.check
+                                        ? "bg-green-500 text-white"
+                                        : "border border-[#DADADA]"
+                                } rounded-[3px]`}
+                            >
+                                {item.check && <FiCheck />}
+                            </button>
                             <p className="text-black text-center">
-                                Fleksibilitas
+                                {item.name}
                             </p>
                             <p className="text-black text-center">
-                                May 23, 2023
+                                {item.date}
                             </p>
                             <p className="text-black text-center">
-                                Rizky Pratama
+                                {item.rating.join(",")}
                             </p>
                             <div className="mx-auto flex justify-center items-center gap-2.5">
                                 <button
-                                    onClick={() => setEditSupplierModal(true)}
+                                    onClick={() => {
+                                        setCurrentSupplier(index);
+                                        setEditSupplierModal(true);
+                                    }}
                                     className="w-10 h-10 flex justify-center items-center bg-[#F9AA61] rounded-lg"
                                 >
                                     <PencilIcon />
                                 </button>
-                                <button className="w-10 h-10 flex justify-center items-center bg-[#F96A61] rounded-lg">
+                                <button
+                                    onClick={() => handleDelete(index)}
+                                    className="w-10 h-10 flex justify-center items-center bg-[#F96A61] rounded-lg"
+                                >
                                     <TrashIcon />
                                 </button>
                             </div>

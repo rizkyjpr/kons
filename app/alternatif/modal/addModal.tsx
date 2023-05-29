@@ -1,10 +1,21 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
 
 interface Props {
+    kriteriaData: any;
     setModal(state: boolean): void;
+    handleSubmit(data: any): void;
 }
 
-export default function AddModal({ setModal }: Props) {
+export default function AddModal({
+    kriteriaData,
+    setModal,
+    handleSubmit,
+}: Props) {
+    const ratingData = kriteriaData.map((item: any) => item.rating);
+    const [nama, setNama] = useState("");
+    const [rating, setRating] = useState<number[]>(ratingData);
+
     return (
         <div className="absolute top-0 left-0 w-screen h-screen bg-[#2E2E2E] bg-opacity-60 flex justify-center items-center">
             <div className="w-[820px] h-[630px] p-10 bg-white rounded-[18px] flex flex-col justify-between items-center">
@@ -17,23 +28,34 @@ export default function AddModal({ setModal }: Props) {
                         <input
                             className="mt-2 w-full h-10 border border-[#E1E1E1] px-2"
                             type="text"
+                            value={nama}
+                            onChange={(e) => setNama(e.target.value)}
                         />
                     </div>
 
                     <div className="mt-10">
                         <p className="font-bold text-black">Rating Supplier</p>
                         <div className="grid grid-cols-4 mt-8 gap-y-4">
-                            {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                            {kriteriaData.map((item: any, index: number) => (
                                 <div
                                     className="flex flex-col justify-start items-start"
-                                    key={item}
+                                    key={index}
                                 >
                                     <p className="font-bold text-black">
-                                        Fleksibilitas
+                                        {item.name}
                                     </p>
                                     <input
                                         className="mt-2 w-32 h-10 border border-[#E1E1E1] px-2"
-                                        type="text"
+                                        type="number"
+                                        value={rating[index]}
+                                        onChange={(e) => {
+                                            const newRatingData = rating;
+                                            newRatingData[index] = Number(
+                                                e.target.value
+                                            );
+
+                                            setRating([...newRatingData]);
+                                        }}
                                     />
                                 </div>
                             ))}
@@ -43,7 +65,14 @@ export default function AddModal({ setModal }: Props) {
 
                 <div className="w-full flex flex-col justify-center items-center gap-2">
                     <button
-                        onClick={() => setModal(false)}
+                        onClick={() => {
+                            handleSubmit({
+                                nama,
+                                rating,
+                            });
+                            setModal(false);
+                            setNama("");
+                        }}
                         className="w-full flex justify-center items-center py-3.5 bg-[#56AAB1] text-white rounded-[4px]"
                     >
                         Submit

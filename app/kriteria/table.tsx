@@ -21,6 +21,7 @@ export const Table = () => {
             name,
             date: `${month} ${date}, ${year}`,
             addedBy: "Rizky Pratama",
+            rating: 0,
             check: false,
         };
 
