@@ -14,9 +14,16 @@ export default function EditModal({
     setModal,
     handleSubmit,
 }: Props) {
-    const ratingData = kriteriaData.map((item: any) => item.rating);
+    console.log("supplier", supplierData, kriteriaData);
+    const initialValue = supplierData.kriteria.map((item: any) => {
+        return {
+            id_kriteria: item.id_kriteria,
+            id_supplier: item.id_supplier,
+            nilai: item.nilai,
+        };
+    });
     const [nama, setNama] = useState(supplierData.name);
-    const [rating, setRating] = useState<number[]>(supplierData.rating);
+    const [rating, setRating] = useState<any[]>(initialValue);
 
     return (
         <div className="absolute top-0 left-0 w-screen h-screen bg-[#2E2E2E] bg-opacity-60 flex justify-center items-center">
@@ -38,23 +45,41 @@ export default function EditModal({
                     <div className="mt-10">
                         <p className="font-bold text-black">Rating Supplier</p>
                         <div className="grid grid-cols-4 mt-8 gap-y-4">
-                            {kriteriaData.map((item: any, index: number) => (
+                            {rating.map((item: any) => (
                                 <div
                                     className="flex flex-col justify-start items-start"
-                                    key={index}
+                                    key={item.id_kriteria}
                                 >
                                     <p className="font-bold text-black">
-                                        {item.name}
+                                        {
+                                            kriteriaData.filter(
+                                                (kriteria: any) =>
+                                                    kriteria.id ===
+                                                    item.id_kriteria
+                                            )[0].name
+                                        }
                                     </p>
                                     <input
                                         className="mt-2 w-32 h-10 border border-[#E1E1E1] px-2"
                                         type="number"
-                                        value={rating[index]}
+                                        value={
+                                            rating[
+                                                rating.findIndex(
+                                                    (data) =>
+                                                        data.id_kriteria ===
+                                                        item.id_kriteria
+                                                )
+                                            ].nilai
+                                        }
                                         onChange={(e) => {
                                             const newRatingData = rating;
-                                            newRatingData[index] = Number(
-                                                e.target.value
-                                            );
+                                            newRatingData[
+                                                rating.findIndex(
+                                                    (data) =>
+                                                        data.id_kriteria ===
+                                                        item.id_kriteria
+                                                )
+                                            ].nilai = Number(e.target.value);
 
                                             setRating([...newRatingData]);
                                         }}
@@ -69,10 +94,10 @@ export default function EditModal({
                     <button
                         onClick={() => {
                             handleSubmit({
-                                nama,
+                                id_supplier: supplierData.id,
+                                name: nama,
                                 rating,
                             });
-                            setModal(false);
                         }}
                         className="w-full flex justify-center items-center py-3.5 bg-[#56AAB1] text-white rounded-[4px]"
                     >

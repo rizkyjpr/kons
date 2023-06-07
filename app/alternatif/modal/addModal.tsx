@@ -12,9 +12,16 @@ export default function AddModal({
     setModal,
     handleSubmit,
 }: Props) {
-    const ratingData = kriteriaData.map((item: any) => item.rating);
+    const initialValue = kriteriaData.map((item: any) => {
+        return {
+            id_kriteria: item.id,
+            nilai: 0,
+        };
+    });
     const [nama, setNama] = useState("");
-    const [rating, setRating] = useState<number[]>(ratingData);
+    const [rating, setRating] = useState<any[]>(initialValue);
+
+    console.log(rating);
 
     return (
         <div className="absolute top-0 left-0 w-screen h-screen bg-[#2E2E2E] bg-opacity-60 flex justify-center items-center">
@@ -36,10 +43,10 @@ export default function AddModal({
                     <div className="mt-10">
                         <p className="font-bold text-black">Rating Supplier</p>
                         <div className="grid grid-cols-4 mt-8 gap-y-4">
-                            {kriteriaData.map((item: any, index: number) => (
+                            {kriteriaData.map((item: any) => (
                                 <div
                                     className="flex flex-col justify-start items-start"
-                                    key={index}
+                                    key={item.id}
                                 >
                                     <p className="font-bold text-black">
                                         {item.name}
@@ -47,12 +54,24 @@ export default function AddModal({
                                     <input
                                         className="mt-2 w-32 h-10 border border-[#E1E1E1] px-2"
                                         type="number"
-                                        value={rating[index]}
+                                        value={
+                                            rating[
+                                                rating.findIndex(
+                                                    (rtng) =>
+                                                        rtng.id_kriteria ===
+                                                        item.id
+                                                )
+                                            ].nilai
+                                        }
                                         onChange={(e) => {
                                             const newRatingData = rating;
-                                            newRatingData[index] = Number(
-                                                e.target.value
-                                            );
+                                            newRatingData[
+                                                rating.findIndex(
+                                                    (rtng) =>
+                                                        rtng.id_kriteria ===
+                                                        item.id
+                                                )
+                                            ].nilai = Number(e.target.value);
 
                                             setRating([...newRatingData]);
                                         }}
@@ -70,7 +89,6 @@ export default function AddModal({
                                 nama,
                                 rating,
                             });
-                            setModal(false);
                             setNama("");
                         }}
                         className="w-full flex justify-center items-center py-3.5 bg-[#56AAB1] text-white rounded-[4px]"

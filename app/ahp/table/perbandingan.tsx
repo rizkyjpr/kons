@@ -1,29 +1,22 @@
 "use client";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
     kriteriaData: any;
+    mappingData: any;
     handleCalculate(data: any): void;
 }
 
-export const Perbandingan = ({ kriteriaData, handleCalculate }: Props) => {
-    const initNilai: any[] = [];
-    kriteriaData.map((item: any, row: number) => {
-        const rowNilai: any[] = [];
-        kriteriaData.map((item: any, index: number) => {
-            if (row == index) {
-                rowNilai[index] = 1;
-            } else if (row > index) {
-                rowNilai[index] = 0;
-            } else {
-                rowNilai[index] = 0;
-            }
-        });
-        initNilai.push(rowNilai);
-    });
+export const Perbandingan = ({
+    kriteriaData,
+    mappingData,
+    handleCalculate,
+}: Props) => {
+    const [nilai, setNilai] = useState(mappingData);
 
-    const [nilai, setNilai] = useState(initNilai);
+    useEffect(() => {
+        setNilai(mappingData);
+    }, []);
 
     const renderRowValue = (row: number, data: any) => {
         return (
@@ -32,13 +25,28 @@ export const Perbandingan = ({ kriteriaData, handleCalculate }: Props) => {
                     {data.name}
                 </p>
                 {kriteriaData.map((item: any, index: number) => {
+                    const current = nilai.filter(
+                        (val: any) =>
+                            val.row === data.id && val.column === item.id
+                    )[0];
+
+                    const indexNilai = mappingData.findIndex(
+                        (val: any) =>
+                            val.row === data.id && val.column === item.id
+                    );
+
+                    const inversIndexNilai = mappingData.findIndex(
+                        (val: any) =>
+                            val.column === data.id && val.row === item.id
+                    );
+
                     if (row == index) {
                         return (
                             <p
                                 className="text-xs text-black text-center my-auto"
                                 key={index}
                             >
-                                {nilai[row][index]}
+                                {current.value}
                             </p>
                         );
                     } else if (row > index) {
@@ -47,7 +55,7 @@ export const Perbandingan = ({ kriteriaData, handleCalculate }: Props) => {
                                 className="text-xs text-black text-center my-auto"
                                 key={index}
                             >
-                                {nilai[row][index]}
+                                {current.value}
                             </p>
                         );
                     } else {
@@ -55,14 +63,29 @@ export const Perbandingan = ({ kriteriaData, handleCalculate }: Props) => {
                             <input
                                 className="w-[60px] h-10 mx-auto border border-[#DADADA] rounded-[3px] text-center"
                                 type="number"
-                                value={nilai[row][index]}
+                                value={nilai[indexNilai].value}
                                 onChange={(e) => {
                                     const newNilaiData = nilai;
-                                    newNilaiData[row][index] = Number(
-                                        e.target.value
-                                    );
+                                    const fixValue: number =
+                                        Number(e.target.value) > 9
+                                            ? 9
+                                            : Number(e.target.value) < 1
+                                            ? 1
+                                            : Number(e.target.value);
+                                    newNilaiData[indexNilai] = {
+                                        ...nilai[indexNilai],
+                                        value: fixValue,
+                                    };
+
+                                    newNilaiData[inversIndexNilai] = {
+                                        ...nilai[inversIndexNilai],
+                                        value: 1 / fixValue,
+                                    };
+
                                     setNilai([...newNilaiData]);
                                 }}
+                                max={9}
+                                min={1}
                                 key={index}
                             ></input>
                         );
@@ -93,10 +116,10 @@ export const Perbandingan = ({ kriteriaData, handleCalculate }: Props) => {
                 <p className="font-bold text-xs text-[#AEAEAE] text-center">
                     Nama Kriteria
                 </p>
-                {kriteriaData.map((item: any, index: number) => (
+                {kriteriaData.map((item: any) => (
                     <p
                         className="font-bold text-xs text-[#AEAEAE] text-center"
-                        key={index}
+                        key={item.id}
                     >
                         {item.name}
                     </p>

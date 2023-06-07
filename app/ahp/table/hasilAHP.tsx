@@ -1,13 +1,16 @@
 interface Props {
     kriteriaData: any;
-    hasilNormalisasi: any;
+    ahp: any;
 }
 
-export const HasilAHP = ({ kriteriaData, hasilNormalisasi }: Props) => {
-    const renderRowValue = (index: number) => {
+export const HasilAHP = ({ kriteriaData, ahp }: Props) => {
+    const renderRowValue = (data: any) => {
+        const current = ahp.filter(
+            (item: any) => item.id_kriteria === data.id
+        )[0];
         return (
-            <p className="text-xs text-black text-center my-auto">
-                {hasilNormalisasi.length === 0 ? 0 : hasilNormalisasi[index][0]}
+            <p className="text-xs text-black text-center my-auto" key={data.id}>
+                {current ? current.nilai : 0}
             </p>
         );
     };
@@ -41,7 +44,7 @@ export const HasilAHP = ({ kriteriaData, hasilNormalisasi }: Props) => {
             >
                 <p className="text-xs text-black text-center my-auto">bobot</p>
                 {kriteriaData.map((data: any, index: number) =>
-                    renderRowValue(index)
+                    renderRowValue(data)
                 )}
             </div>
             <div className="w-20 h-10 mx-auto mt-5 bg-[#D9D9D9]"></div>

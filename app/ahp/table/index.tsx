@@ -3,33 +3,76 @@ import { useState } from "react";
 import { HasilAHP } from "./hasilAHP";
 import { HasilNormalisasi } from "./hasilNormalisasi";
 import { Perbandingan } from "./perbandingan";
+import { useGlobalContext } from "@/app/Context/store";
+import Axios from "@/lib/postgres";
 
 export const Table = () => {
-    const [kriteriaData, setKriteriaData] = useState<any[]>(
-        JSON.parse(localStorage.getItem("kriteria") || "[]")
-    );
+    const { kriteria, setKriteria } = useGlobalContext();
+    const mappingKriteria: any[] = [];
+
+    kriteria.map((kriteria1: any) => {
+        kriteria.map((kriteria2: any) => {
+            mappingKriteria.push({
+                row: kriteria1.id,
+                column: kriteria2.id,
+                value: kriteria1.id === kriteria2.id ? 1 : 1,
+            });
+        });
+    });
+
     const [hasilNormalisasi, setHasilNormalisasi] = useState([]);
+    const [ahp, setAhp] = useState([]);
+    const [lambda, setLambda] = useState(0);
+    const [ci, setCi] = useState(0);
+    const [cr, setCr] = useState(0);
 
-    const selectedKriteria = kriteriaData.filter((item) => item.check);
+    const selectedKriteria = kriteria.filter((item: any) => item.check);
 
-    const handleCalculate = (data: any) => {
-        setHasilNormalisasi(data);
+    const handleCalculate = async (data: any) => {
+        const save = await Axios.post(`/kriteria/perbandingan`, {
+            nilai: data,
+        }).then((res) => res.data);
+
+        if (save.status !== 201) return;
+
+        const hasil = await Axios.get(`/kriteria/normalisasi`).then(
+            (res) => res.data
+        );
+
+        const hasilAhp = await Axios.get(`/kriteria/ahp`).then(
+            (res) => res.data
+        );
+
+        const hasilLambda = await Axios.get(`/kriteria/lambdamax`).then(
+            (res) => res.data.lambda_max
+        );
+
+        const hasilCi = await Axios.get(`/kriteria/ci`).then((res) => res.data);
+
+        const hasilCr = await Axios.get(`/kriteria/cr`).then((res) => res.data);
+
+        setHasilNormalisasi(hasil);
+        setAhp(hasilAhp);
+        setLambda(hasilLambda);
+        setCi(hasilCi);
+        setCr(hasilCr);
     };
 
     return (
         <>
             <Perbandingan
                 kriteriaData={selectedKriteria}
+                mappingData={mappingKriteria}
                 handleCalculate={handleCalculate}
             />
             <HasilNormalisasi
                 kriteriaData={selectedKriteria}
                 hasilNormalisasi={hasilNormalisasi}
+                lambda={lambda}
+                ci={ci}
+                cr={cr}
             />
-            <HasilAHP
-                kriteriaData={selectedKriteria}
-                hasilNormalisasi={hasilNormalisasi}
-            />
+            <HasilAHP kriteriaData={selectedKriteria} ahp={ahp} />
         </>
     );
 };
