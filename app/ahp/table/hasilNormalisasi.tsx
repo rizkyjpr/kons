@@ -16,7 +16,7 @@ export const HasilNormalisasi = ({
     const renderRowValue = (row: number, data: any) => {
         return (
             <>
-                <p className="text-xs text-black text-center my-auto">
+                <p className="w-[60px] text-xs text-black text-center my-auto">
                     {data.name}
                 </p>
                 {kriteriaData.map((item: any, index: number) => {
@@ -28,7 +28,7 @@ export const HasilNormalisasi = ({
 
                     return (
                         <p
-                            className="text-xs text-black text-center my-auto"
+                            className="w-[60px] text-xs text-black text-center my-auto"
                             key={index}
                         >
                             {current ? current.nilai_normalisasi : 0}
@@ -54,16 +54,14 @@ export const HasilNormalisasi = ({
                 </div>
             </div>
             <div
-                className={`w-full mt-2 py-3 grid grid-cols-${
-                    kriteriaData.length + 1
-                } border-y border-[#E4E4E4]`}
+                className={`w-full mt-2 py-3 flex justify-around items-center border-y border-[#E4E4E4]`}
             >
-                <p className="font-bold text-xs text-[#AEAEAE] text-center">
+                <p className="w-[60px] font-bold text-xs text-[#AEAEAE] text-center">
                     Nama Kriteria
                 </p>
                 {kriteriaData.map((item: any, index: number) => (
                     <p
-                        className="font-bold text-xs text-[#AEAEAE] text-center"
+                        className="w-[60px] font-bold text-xs text-[#AEAEAE] text-center"
                         key={index}
                     >
                         {item.name}
@@ -72,9 +70,7 @@ export const HasilNormalisasi = ({
             </div>
             {kriteriaData.map((data: any, row: number) => (
                 <div
-                    className={`w-full py-4 grid grid-cols-${
-                        kriteriaData.length + 1
-                    } border-b border-[#E4E4E4]`}
+                    className={`w-full py-4 flex justify-around items-center border-b border-[#E4E4E4]`}
                     key={row}
                 >
                     {renderRowValue(row, data)}

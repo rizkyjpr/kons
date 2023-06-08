@@ -112,7 +112,7 @@ export const Perbandingan = ({
             <div
                 className={`w-full mt-2 py-3 flex justify-around items-center border-y border-[#E4E4E4]`}
             >
-                <p className="font-bold text-xs text-[#AEAEAE] text-center">
+                <p className="w-[60px] font-bold text-xs text-[#AEAEAE] text-center">
                     Nama Kriteria
                 </p>
                 {kriteriaData.map((item: any) => (
