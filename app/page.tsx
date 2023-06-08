@@ -1,18 +1,14 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useGlobalContext } from "./Context/store";
 
 export default function Home() {
     const { push } = useRouter();
-
-    const user = JSON.parse(localStorage.getItem("active-user") || "{}");
+    const { user } = useGlobalContext();
 
     useEffect(() => {
-        if (Object.keys(user).length === 0) {
-            push("/login");
-        } else {
-            push("/kriteria");
-        }
+        if (!user.name) push("/login");
     }, []);
 
     return (
