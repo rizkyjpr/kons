@@ -10,12 +10,14 @@ export const Table = () => {
     const { kriteria, setKriteria } = useGlobalContext();
     const mappingKriteria: any[] = [];
 
-    kriteria.map((kriteria1: any) => {
-        kriteria.map((kriteria2: any) => {
+    const selectedKriteria = kriteria.filter((item: any) => item.check);
+
+    selectedKriteria.map((kriteria1: any) => {
+        selectedKriteria.map((kriteria2: any) => {
             mappingKriteria.push({
                 row: kriteria1.id,
                 column: kriteria2.id,
-                value: kriteria1.id === kriteria2.id ? 1 : 1,
+                value: kriteria1.id === kriteria2.id ? 1.0 : 1.0,
             });
         });
     });
@@ -25,8 +27,6 @@ export const Table = () => {
     const [lambda, setLambda] = useState(0);
     const [ci, setCi] = useState(0);
     const [cr, setCr] = useState(0);
-
-    const selectedKriteria = kriteria.filter((item: any) => item.check);
 
     const handleCalculate = async (data: any) => {
         const save = await Axios.post(`/kriteria/perbandingan`, {

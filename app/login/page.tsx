@@ -15,8 +15,13 @@ export default function Login() {
     });
 
     const handleSubmit = async () => {
-        const res = await Axios.post(`/login`, form);
-        setUser(res.data);
+        const data = await Axios.post(`/login`, form)
+            .then((res) => res.data)
+            .catch((err) => alert("Wrong email or password"));
+
+        if (!data) return;
+
+        setUser(data);
         push("/kriteria");
     };
 

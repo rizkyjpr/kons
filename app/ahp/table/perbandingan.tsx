@@ -67,10 +67,10 @@ export const Perbandingan = ({
                                 onChange={(e) => {
                                     const newNilaiData = nilai;
                                     const fixValue: number =
-                                        Number(e.target.value) > 9
-                                            ? 9
-                                            : Number(e.target.value) < 1
-                                            ? 1
+                                        Number(e.target.value) > 9.0
+                                            ? 9.0
+                                            : Number(e.target.value) < 0
+                                            ? 0
                                             : Number(e.target.value);
                                     newNilaiData[indexNilai] = {
                                         ...nilai[indexNilai],
@@ -79,13 +79,13 @@ export const Perbandingan = ({
 
                                     newNilaiData[inversIndexNilai] = {
                                         ...nilai[inversIndexNilai],
-                                        value: 1 / fixValue,
+                                        value: 1.0 / fixValue,
                                     };
 
                                     setNilai([...newNilaiData]);
                                 }}
-                                max={9}
-                                min={1}
+                                max={9.0}
+                                min={0}
                                 key={index}
                             ></input>
                         );
