@@ -21,8 +21,6 @@ export default function AddModal({
     const [nama, setNama] = useState("");
     const [rating, setRating] = useState<any[]>(initialValue);
 
-    console.log(rating);
-
     return (
         <div className="absolute top-0 left-0 w-screen h-screen bg-[#2E2E2E] bg-opacity-60 flex justify-center items-center">
             <div className="w-[820px] h-[630px] p-10 bg-white rounded-[18px] flex flex-col justify-between items-center">

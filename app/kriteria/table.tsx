@@ -13,6 +13,7 @@ export const Table = () => {
     const [type, setType] = useState("Benefit");
 
     const handleSubmit = async () => {
+        if (kriteriaName === "") return alert("Please input name");
         const form = {
             name: kriteriaName,
             type,

@@ -22,6 +22,8 @@ export const Table = () => {
     const selectedSupplier = supplier.filter((item: any) => item.check);
 
     const handleAdd = async (formData: any) => {
+        if (formData.nama === "") return alert("Please input name");
+
         const form = {
             name: formData.nama,
             added_by: user.id,
@@ -47,6 +49,8 @@ export const Table = () => {
     };
 
     const handleEdit = async (formData: any) => {
+        if (formData.name === "") return alert("Please input name");
+
         const form = { ...formData, added_by: user.id };
 
         const res = await Axios.patch(`/supplier`, form).then(
