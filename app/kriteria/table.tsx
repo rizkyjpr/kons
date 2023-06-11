@@ -69,12 +69,16 @@ export const Table = () => {
     };
 
     useEffect(() => {
+        const oldKriteria = kriteria;
         const fetchData = async () => {
             const kriteriaData = await Axios.get(`/kriteria`).then((res) => {
                 return res.data.map((item: any) => {
+                    const savedData = oldKriteria.find(
+                        (a: any) => a.id === item.id
+                    );
                     return {
                         ...item,
-                        check: false,
+                        check: savedData ? savedData.check : false,
                     };
                 });
             });
