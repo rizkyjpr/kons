@@ -284,16 +284,14 @@ export const Table = () => {
                     ) : (
                         <div className="w-full flex-col justify-center items-center">
                             <div
-                                className={`w-full mt-2 py-3 grid grid-cols-${
-                                    selectedKriteria.length + 1
-                                } border-y border-[#E4E4E4]`}
+                                className={`w-full mt-2 py-3 flex justify-around border-y border-[#E4E4E4]`}
                             >
-                                <p className="font-bold text-xs text-[#AEAEAE] text-center">
+                                <p className="w-[60px] font-bold text-xs text-[#AEAEAE] text-center">
                                     Nama Supplier
                                 </p>
                                 {selectedKriteria.map((k: any) => (
                                     <p
-                                        className="font-bold text-xs text-[#AEAEAE] text-center"
+                                        className="w-[60px] font-bold text-xs text-[#AEAEAE] text-center"
                                         key={k.id}
                                     >
                                         {k.name}
@@ -302,12 +300,10 @@ export const Table = () => {
                             </div>
                             {selectedSupplier.map((s: any) => (
                                 <div
-                                    className={`w-full py-4 grid grid-cols-${
-                                        selectedKriteria.length + 1
-                                    } border-b border-[#E4E4E4]`}
+                                    className={`w-full py-4 flex justify-around border-b border-[#E4E4E4]`}
                                     key={s.id}
                                 >
-                                    <p className="text-black text-center">
+                                    <p className="w-[60px] text-black text-center">
                                         {s.name}
                                     </p>
                                     {selectedKriteria.map((k: any) => {
@@ -319,7 +315,7 @@ export const Table = () => {
 
                                         return (
                                             <p
-                                                className="font-bold text-xs text-[#AEAEAE] text-center"
+                                                className="w-[60px] font-bold text-xs text-[#AEAEAE] text-center"
                                                 key={k.id}
                                             >
                                                 {current
