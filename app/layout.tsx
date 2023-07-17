@@ -7,8 +7,6 @@ import { GlobalContextProvider } from "./Context/store";
 
 const inter = Inter({ subsets: ["latin"] });
 
-
-
 export default function RootLayout({
     children,
 }: {
